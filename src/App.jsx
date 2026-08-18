@@ -15,6 +15,7 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import Profile from './pages/Profile'
 import Orders from './pages/Orders'
+import Support from './pages/Support'
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
                   <Route path="signup" element={<SignUp />} />
                   <Route path="profile" element={<Profile />} />
                   <Route path="orders" element={<Orders />} />
+                  <Route path="support" element={<Support />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Route>
               </Routes>
