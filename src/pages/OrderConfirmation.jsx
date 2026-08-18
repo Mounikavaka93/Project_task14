@@ -7,6 +7,7 @@ import {
   FiNavigation,
 } from 'react-icons/fi'
 import { useCart } from '../context/CartContext'
+import OrderTracking from '../components/OrderTracking'
 import { formatPrice } from '../utils/format'
 import {
   formatDateTime,
@@ -55,8 +56,7 @@ export default function OrderConfirmation() {
   return (
     <div className="container-app py-10 sm:py-14">
       <div className="mx-auto max-w-2xl">
-        <div className="rounded-2xl border border-line bg-white p-6 text-center sm:p-10">
-          {/* Success message */}
+        <div className="rounded-2xl border border-line bg-card p-6 text-center sm:p-10">
           <span className="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-success">
             <FiCheckCircle size={36} />
           </span>
@@ -70,7 +70,6 @@ export default function OrderConfirmation() {
           </p>
 
           <div className="mt-8 grid gap-4 rounded-2xl bg-surface p-5 text-left sm:grid-cols-2">
-            {/* Order ID */}
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted">
                 Order ID
@@ -85,9 +84,7 @@ export default function OrderConfirmation() {
                 {formatDateTime(order.createdAt)}
               </p>
             </div>
-
-            {/* Estimated delivery time */}
-            <div className="sm:col-span-2 rounded-xl border border-line bg-white p-4">
+            <div className="sm:col-span-2 rounded-xl border border-line bg-card p-4">
               <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
                 <FiClock className="text-brand" />
                 Estimated delivery time
@@ -96,11 +93,11 @@ export default function OrderConfirmation() {
                 {formatTime(order.arriveFrom)} – {formatTime(order.arriveTo)}
               </p>
               <p className="mt-1 text-sm text-muted">
-                Arriving in {order.estimatedDelivery || order.estimatedDeliveryLabel}{' '}
-                from order time
+                Arriving in{' '}
+                {order.estimatedDelivery || order.estimatedDeliveryLabel} from
+                order time
               </p>
             </div>
-
             <div className="sm:col-span-2">
               <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
                 <FiMapPin className="text-brand" />
@@ -115,7 +112,10 @@ export default function OrderConfirmation() {
             </div>
           </div>
 
-          {/* Ordered items */}
+          <div className="mt-6 text-left">
+            <OrderTracking order={order} />
+          </div>
+
           <div className="mt-8 text-left">
             <h2 className="mb-4 font-display text-xl font-bold">Ordered items</h2>
             <ul className="space-y-3">
@@ -140,14 +140,12 @@ export default function OrderConfirmation() {
               ))}
             </ul>
 
-            {/* Total amount */}
             <div className="mt-4 flex items-center justify-between border-t border-line pt-4 text-lg font-bold">
               <span>Total amount</span>
               <span>{formatPrice(finalTotal)}</span>
             </div>
           </div>
 
-          {/* Actions */}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
               to="/orders"

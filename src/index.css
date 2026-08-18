@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces", Georgia, serif;
@@ -14,6 +16,18 @@
   --color-success: #15803d;
   --color-veg: #16a34a;
   --color-nonveg: #dc2626;
+}
+
+html.dark {
+  --color-brand: #fb923c;
+  --color-brand-dark: #f97316;
+  --color-brand-soft: #3b2414;
+  --color-ink: #f5f5f4;
+  --color-muted: #a8a29e;
+  --color-surface: #0c0a09;
+  --color-card: #1c1917;
+  --color-line: #292524;
+  --color-success: #4ade80;
 }
 
 * {
@@ -32,6 +46,7 @@ body {
   color: var(--color-ink);
   background: var(--color-surface);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #root {
@@ -50,6 +65,23 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+/* Map common light backgrounds in dark mode */
+.dark .bg-white {
+  background-color: var(--color-card);
+}
+
+.dark .bg-white\/95 {
+  background-color: color-mix(in srgb, var(--color-card) 95%, transparent);
+}
+
+.dark .hover\:bg-white:hover {
+  background-color: var(--color-card);
+}
+
+.dark .btn-secondary {
+  background: var(--color-card);
 }
 
 /* App container — Mobile 320+ → Desktop 1440+ */
@@ -86,7 +118,6 @@ textarea {
   }
 }
 
-/* Shared page rhythm */
 .page-section {
   padding-block: 2.5rem;
 }
@@ -124,7 +155,6 @@ textarea {
   }
 }
 
-/* Consistent primary / secondary buttons */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -154,7 +184,7 @@ textarea {
   gap: 0.5rem;
   border-radius: 0.75rem;
   border: 1px solid var(--color-line);
-  background: #fff;
+  background: var(--color-card);
   padding: 0.75rem 1.25rem;
   font-size: 0.875rem;
   font-weight: 600;
@@ -166,7 +196,6 @@ textarea {
   border-color: color-mix(in srgb, var(--color-brand) 40%, var(--color-line));
 }
 
-/* Horizontal scroll rows (categories) */
 .scroll-row {
   display: flex;
   gap: 0.75rem;
@@ -188,11 +217,11 @@ textarea {
   border-radius: 999px;
 }
 
-/* Card grid — consistent responsive columns */
 .card-grid {
   display: grid;
   gap: 1.25rem;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
 }
 
 @media (min-width: 640px) {
@@ -202,17 +231,85 @@ textarea {
 }
 
 @media (min-width: 1024px) {
-  .card-grid-3 {
+  .card-grid.card-grid-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .card-grid-4 {
+  .card-grid.card-grid-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
-@media (min-width: 1440px) {
-  .card-grid-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+/* Screen-reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Animations */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes cart-bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.18);
+  }
+  55% {
+    transform: scale(0.94);
+  }
+  75% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-brand) 45%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+.animate-toast-in {
+  animation: toast-in 0.28s ease-out;
+}
+
+.animate-cart-bounce {
+  animation: cart-bounce 0.55s ease;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+/* Space for mobile bottom nav */
+.pb-mobile-nav {
+  padding-bottom: 5.5rem;
+}
+
+@media (min-width: 768px) {
+  .pb-mobile-nav {
+    padding-bottom: 0;
   }
 }

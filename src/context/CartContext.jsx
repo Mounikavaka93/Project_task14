@@ -16,10 +16,13 @@ export function CartProvider({ children }) {
     }
   })
   const [lastOrder, setLastOrder] = useState(null)
+  const [cartBump, setCartBump] = useState(0)
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
   }, [items])
+
+  const bumpCart = () => setCartBump((n) => n + 1)
 
   const addToCart = (food, quantity = 1) => {
     setItems((prev) => {
@@ -33,6 +36,7 @@ export function CartProvider({ children }) {
       }
       return [...prev, { ...food, quantity }]
     })
+    bumpCart()
   }
 
   const updateQuantity = (id, quantity) => {
@@ -40,6 +44,7 @@ export function CartProvider({ children }) {
       if (quantity <= 0) return prev.filter((item) => item.id !== id)
       return prev.map((item) => (item.id === id ? { ...item, quantity } : item))
     })
+    bumpCart()
   }
 
   const removeFromCart = (id) => {
@@ -87,6 +92,7 @@ export function CartProvider({ children }) {
     lastOrder,
     setLastOrder,
     placeOrder,
+    cartBump,
   }
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

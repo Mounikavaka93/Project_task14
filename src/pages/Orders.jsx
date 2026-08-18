@@ -2,6 +2,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { FiArrowLeft, FiClock, FiMapPin, FiPackage } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import { useOrders } from '../context/OrdersContext'
+import OrderTracking from '../components/OrderTracking'
 import {
   formatDateTime,
   formatTime,
@@ -15,9 +16,7 @@ function StatusBadge({ status }) {
   return (
     <span
       className={`rounded-lg px-2.5 py-1 text-xs font-bold ${
-        isPast
-          ? 'bg-success/10 text-success'
-          : 'bg-brand-soft text-brand'
+        isPast ? 'bg-success/10 text-success' : 'bg-brand-soft text-brand'
       }`}
     >
       {status}
@@ -33,7 +32,7 @@ function OrderCard({ order, status }) {
   const isPast = status === ORDER_STATUS.DELIVERED
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-line bg-white">
+    <article className="overflow-hidden rounded-2xl border border-line bg-card">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-surface px-4 py-3 sm:px-5">
         <div>
           <p className="font-bold text-ink">Order {order.id}</p>
@@ -71,6 +70,12 @@ function OrderCard({ order, status }) {
           )}
         </div>
       </div>
+
+      {!isPast && (
+        <div className="border-t border-line px-4 py-4 sm:px-5">
+          <OrderTracking order={order} />
+        </div>
+      )}
 
       <ul className="space-y-2 border-t border-line px-4 py-4 sm:px-5">
         {order.items?.map((item) => (
@@ -110,7 +115,7 @@ function OrderSection({ title, description, orders, resolveStatus, emptyText }) 
       </div>
 
       {orders.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-line bg-white py-10 text-center">
+        <div className="rounded-2xl border border-dashed border-line bg-card py-10 text-center">
           <p className="text-sm text-muted">{emptyText}</p>
         </div>
       ) : (
@@ -151,12 +156,12 @@ export default function Orders() {
       <div className="mb-8">
         <h1 className="font-display text-3xl font-bold text-ink">My orders</h1>
         <p className="mt-1 text-muted">
-          Active orders move to past automatically when the arrival time ends
+          Track active orders live — they move to past when arrival time ends
         </p>
       </div>
 
       {allOrders.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-line bg-white py-16 text-center">
+        <div className="rounded-2xl border border-dashed border-line bg-card py-16 text-center">
           <FiPackage className="mx-auto mb-3 text-muted" size={32} />
           <p className="font-semibold text-ink">No orders placed yet</p>
           <Link
@@ -170,7 +175,7 @@ export default function Orders() {
         <>
           <OrderSection
             title="Active orders"
-            description="On the way — waiting for the estimated arrival window"
+            description="Live tracking until the estimated arrival window ends"
             orders={active}
             resolveStatus={resolveStatus}
             emptyText="No active orders right now"

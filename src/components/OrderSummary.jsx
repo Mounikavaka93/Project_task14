@@ -10,7 +10,7 @@ export default function OrderSummary({
   const finalTotal = Math.max(totals.total - promoDiscount, 0)
 
   return (
-    <aside className="rounded-2xl border border-line bg-white p-5 sm:p-6">
+    <aside className="rounded-2xl border border-line bg-card p-5 sm:p-6">
       {showTitle && (
         <h2 className="mb-1 font-display text-xl font-bold text-ink">
           Order Summary

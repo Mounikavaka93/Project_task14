@@ -1,22 +1,40 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FiMinus, FiPlus, FiStar } from 'react-icons/fi'
+import { FiHeart, FiMinus, FiPlus, FiStar } from 'react-icons/fi'
 import { useCart } from '../context/CartContext'
+import { useWishlist } from '../context/WishlistContext'
+import { useToast } from '../context/ToastContext'
 import { formatPrice } from '../utils/format'
 
 export default function FoodCard({ food, showRestaurant = false }) {
   const { items, addToCart, updateQuantity } = useCart()
+  const { isWishlisted, toggleWishlist } = useWishlist()
+  const { pushToast } = useToast()
   const cartItem = items.find((item) => item.id === food.id)
   const inCartQty = cartItem?.quantity || 0
   const [qty, setQty] = useState(1)
   const [justAdded, setJustAdded] = useState(false)
+  const wished = isWishlisted(food.id)
 
   const handleAdd = (e) => {
     e.preventDefault()
     e.stopPropagation()
     addToCart(food, qty)
     setJustAdded(true)
+    pushToast(`Added ${food.name} to cart`, 'success')
     setTimeout(() => setJustAdded(false), 1200)
+  }
+
+  const handleWishlist = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    toggleWishlist(food.id)
+    pushToast(
+      wished
+        ? `Removed ${food.name} from wishlist`
+        : `Saved ${food.name} to wishlist`,
+      wished ? 'info' : 'success',
+    )
   }
 
   const bumpCart = (e, nextQty) => {
@@ -26,8 +44,7 @@ export default function FoodCard({ food, showRestaurant = false }) {
   }
 
   return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-white transition duration-200 hover:border-brand/30 hover:shadow-md">
-      {/* Food image + Veg/Non-veg indicator */}
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-card transition duration-200 hover:border-brand/30 hover:shadow-md">
       <Link
         to={`/food/${food.id}`}
         className="relative aspect-[4/3] overflow-hidden bg-line"
@@ -39,7 +56,7 @@ export default function FoodCard({ food, showRestaurant = false }) {
           loading="lazy"
         />
         <span
-          className={`absolute left-3 top-3 inline-flex items-center gap-1 rounded-md border-2 bg-white px-1.5 py-0.5 text-[10px] font-bold ${
+          className={`absolute left-3 top-3 inline-flex items-center gap-1 rounded-md border-2 bg-card px-1.5 py-0.5 text-[10px] font-bold ${
             food.isVeg ? 'border-veg text-veg' : 'border-nonveg text-nonveg'
           }`}
           title={food.isVeg ? 'Vegetarian' : 'Non-vegetarian'}
@@ -49,36 +66,40 @@ export default function FoodCard({ food, showRestaurant = false }) {
           />
           {food.isVeg ? 'VEG' : 'NON-VEG'}
         </span>
-        {/* Rating */}
-        <span className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-lg bg-white/95 px-2 py-1 text-xs font-bold text-ink">
+        <button
+          type="button"
+          onClick={handleWishlist}
+          className={`absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-xl border transition ${
+            wished
+              ? 'border-brand bg-brand text-white'
+              : 'border-line bg-card/95 text-ink hover:text-brand'
+          }`}
+          aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
+        >
+          <FiHeart className={wished ? 'fill-current' : ''} size={16} />
+        </button>
+        <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-lg bg-card/95 px-2 py-1 text-xs font-bold text-ink">
           <FiStar className="fill-amber-400 text-amber-400" size={12} />
           {food.rating}
         </span>
       </Link>
 
       <div className="flex flex-1 flex-col gap-2 p-4">
-        {/* Food name */}
         <Link to={`/food/${food.id}`}>
           <h3 className="font-bold leading-snug text-ink transition hover:text-brand">
             {food.name}
           </h3>
         </Link>
-
-        {/* Description */}
         <p className="line-clamp-2 text-sm text-muted">{food.description}</p>
-
         {showRestaurant && food.restaurantName && (
           <p className="text-xs font-medium text-brand">{food.restaurantName}</p>
         )}
-
-        {/* Price */}
         <p className="mt-1 text-lg font-bold text-ink">
           {formatPrice(food.price)}
         </p>
 
-        {/* Quantity controls + Add to Cart */}
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-2">
-          <div className="inline-flex items-center gap-1 rounded-xl border border-line bg-surface p-1">
+        <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+          <div className="inline-flex shrink-0 items-center gap-1 rounded-xl border border-line bg-surface p-1">
             <button
               type="button"
               aria-label="Decrease quantity"
@@ -87,7 +108,7 @@ export default function FoodCard({ food, showRestaurant = false }) {
                 e.stopPropagation()
                 setQty((q) => Math.max(1, q - 1))
               }}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink transition hover:bg-white"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink transition hover:bg-card"
             >
               <FiMinus size={14} />
             </button>
@@ -109,7 +130,7 @@ export default function FoodCard({ food, showRestaurant = false }) {
           <button
             type="button"
             onClick={handleAdd}
-            className="rounded-xl bg-brand px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark active:scale-[0.98]"
+            className="min-w-0 flex-1 rounded-xl bg-brand px-3 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark active:scale-[0.98] sm:flex-none sm:px-3.5"
           >
             {justAdded ? 'Added!' : 'Add to Cart'}
           </button>
@@ -123,7 +144,7 @@ export default function FoodCard({ food, showRestaurant = false }) {
                 type="button"
                 aria-label="Decrease cart quantity"
                 onClick={(e) => bumpCart(e, inCartQty - 1)}
-                className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-white"
+                className="inline-flex h-6 w-6 items-center justify-center rounded-md bg-card"
               >
                 <FiMinus size={12} />
               </button>

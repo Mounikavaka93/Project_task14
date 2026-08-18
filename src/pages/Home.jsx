@@ -110,7 +110,7 @@ export default function Home() {
       </section>
 
       {/* Popular restaurants */}
-      <section className="bg-white py-10 sm:py-12" id="popular-restaurants">
+      <section className="bg-card py-10 sm:py-12" id="popular-restaurants">
         <div className="container-app">
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
@@ -164,14 +164,14 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <p className="rounded-2xl border border-dashed border-line bg-white py-10 text-center text-muted">
+          <p className="rounded-2xl border border-dashed border-line bg-card py-10 text-center text-muted">
             No dishes found for this category in your location.
           </p>
         )}
       </section>
 
       {/* Promotional / offer section */}
-      <section className="border-t border-line bg-white py-10 sm:py-12" id="offers">
+      <section className="border-t border-line bg-card py-10 sm:py-12" id="offers">
         <div className="container-app">
           <div className="mb-6">
             <h2 className="font-display text-2xl font-bold text-ink sm:text-3xl">

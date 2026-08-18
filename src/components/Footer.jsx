@@ -96,8 +96,13 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link to="/profile" className="transition hover:text-brand">
-                Profile
+              <Link to="/favorites" className="transition hover:text-brand">
+                Favorites
+              </Link>
+            </li>
+            <li>
+              <Link to="/wishlist" className="transition hover:text-brand">
+                Wishlist
               </Link>
             </li>
           </ul>

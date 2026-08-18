@@ -6,7 +6,7 @@ export default function CategoryCard({ category, active = false, onClick }) {
       className={`group flex w-[96px] shrink-0 flex-col items-center gap-2 rounded-2xl border p-2.5 text-center transition duration-200 sm:w-[120px] sm:p-3 ${
         active
           ? 'border-brand bg-brand-soft shadow-sm'
-          : 'border-line bg-white hover:border-brand/40 hover:shadow-sm'
+          : 'border-line bg-card hover:border-brand/40 hover:shadow-sm'
       }`}
     >
       <span className="h-16 w-16 overflow-hidden rounded-xl sm:h-[72px] sm:w-[72px]">

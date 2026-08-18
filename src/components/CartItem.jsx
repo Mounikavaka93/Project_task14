@@ -7,7 +7,7 @@ export default function CartItem({ item }) {
   const lineTotal = item.price * item.quantity
 
   return (
-    <div className="flex gap-3 rounded-2xl border border-line bg-white p-3 sm:gap-4 sm:p-4">
+    <div className="flex gap-3 rounded-2xl border border-line bg-card p-3 sm:gap-4 sm:p-4">
       <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-line sm:h-24 sm:w-24">
         <img
           src={item.image}
@@ -66,7 +66,7 @@ export default function CartItem({ item }) {
               <button
                 type="button"
                 onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-card"
                 aria-label="Decrease quantity"
               >
                 <FiMinus size={14} />
